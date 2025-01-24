@@ -12,4 +12,4 @@ RUN mvn clean package -DskipTests
 FROM openjdk:17.0.1-jdk-slim
 COPY --from=build /target/wisemoney.jar wisemoney.jar
 EXPOSE 8080
-ENTRYPOINT [ "java", "-jdk", "wisemoney.jar" ]
+ENTRYPOINT [ "java", "-jar", "wisemoney.jar" ]
