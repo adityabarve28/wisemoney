@@ -1,0 +1,28 @@
+<nav th:fragment="navbar" class="navbar navbar-dark bg-dark sticky-top">
+  <div class="container-fluid justify-content-between">
+      <!-- Left Section: Navigation Links -->
+      <div class="d-flex">
+          <!-- Home -->
+          <a href="/" class="nav-link text-center text-light me-3 left" data-name="Home">
+              <i class="fas fa-home"></i>
+          </a>
+      </div>
+
+      <!-- Center Section: Search Bar -->
+      <h2 class="header">Wisemoney</h2>
+
+      <!-- User Section (If logged in, show username and logout button) -->
+      <div th:if="${loggedIn}">
+          <span class="nav-link text-center text-light right" data-name="Username"><span th:text="${username}">User</span></span>
+          <a href="/user/logout" class="nav-link text-center text-light right" data-name="Logout">
+              <i class="fas fa-sign-out-alt"></i>
+          </a>
+      </div>
+      <!-- User Icon (Login/Signup) - If not logged in -->
+      <div th:unless="${loggedIn}">
+          <a href="/signup" class="nav-link text-center text-light right" data-name="User">
+              <i class="fas fa-user"></i>
+          </a>
+      </div>
+  </div>
+</nav>

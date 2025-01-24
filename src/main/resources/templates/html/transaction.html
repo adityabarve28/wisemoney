@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/css/style.css">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+  
+  <!-- Google Material Icons -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,200,0,0&" />
+  
+  <title>Wisemoney</title>
+  
+  <!-- Custom Style -->
+  <style>
+  </style>
+</head>
+<body th:if="${loggedIn != false}">
+  <!-- Include Navbar -->
+  <div th:insert="~{navbar :: navbar}"></div> <br>
+  <div class="container">
+    <div class="container-fluid jumbotron">
+     <h3>Welcome, <h3 th:text="${username}">User</h3></h3> 
+     <div th:if="${message}" class="alert alert-success alert-dismissible fade show" role="alert">
+      <span th:text="${message}"></span>
+    </div>
+      <div class="form-group">
+        <input type="button" class="btn btn-info btns" value="Add Transaction" id="addTransaction">
+        <input type="button" class="btn btn-secondary btns" value="View Transaction" id="viewTransaction">
+        <input type="button" class="btn btn-warning btns" value="Update Transaction" id="updateTransaction">
+        <input type="button" class="btn btn-danger btns" value="Delete Transaction" id="deleteTransaction">
+      </div>
+      <div class="container-fluid" id="forms">
+        <!-- ******************************* Add Transaction Form ******************************* -->
+        <div class="add-transaction jumbotron" id="add-transaction">
+          <h3>Add A New Transaction</h3>
+          <form action="/transactions/saveTransaction" method="post">
+            <div class="form-group">
+              <label for="user_id">Username</label>
+              <input type="text" name="user_id" th:value="${username}" class="form-control" disabled>
+            </div>
+            <div class="form-group">
+              <label for="transaction_date">Transaction Date</label>
+              <input type="text" id="transaction_date" class="form-control" disabled>
+            </div>
+            <label for="title">Title</label>
+            <div class="form-group">
+              <input type="text" name="title" class="form-control" placeholder="Enter title">
+            </div>
+            <label for="amount">Amount</label>
+            <div class="form-group">
+              <input type="number" name="amount" class="form-control" placeholder="Enter Amount">
+            </div>
+            <label for="description">Description</label>
+            <div class="form-group">
+              <textarea name="description" id="description" cols="4" rows="4" class="form-control" placeholder="Enter description"></textarea>
+            </div>
+            <div class="form-group">
+              <input type="submit" name="saveTransaction" class="form-control btn btn-primary" value="Save Transaction">
+            </div>
+          </form>
+        </div>
+        <!-- ******************************* End of Add Transaction Form ******************************* -->
+
+         <!-- ******************************* Update Transaction Form ******************************* -->
+         <div class="update-transaction jumbotron" id="update-transaction">
+          <h3>Update a Transaction</h3>
+          <form action="/transactions/updateTransaction" method="post">
+            <!-- Dropdown for selecting a transaction -->
+            <div class="form-group">
+              <label for="transaction_id">Select Transaction</label>
+              <select name="transactionId" id="transaction_id" class="form-control" required>
+                <option value="" disabled selected>-- Select a Transaction --</option>
+                <!-- Thymeleaf loop to populate transactions -->
+                <option th:each="transaction : ${transactions}" 
+                        th:value="${transaction.transactionId}" 
+                        th:text="${transaction.title}"></option>
+              </select>
+            </div>
+        
+            <!-- Input fields for updating details -->
+            <div class="form-group">
+              <label for="title">Title</label>
+              <input type="text" name="title" id="title" class="form-control" placeholder="Enter new title" required>
+            </div>
+            <div class="form-group">
+              <label for="amount">Amount</label>
+              <input type="number" name="amount" id="amount" class="form-control" placeholder="Enter new amount" required>
+            </div>
+            <div class="form-group">
+              <label for="description">Description</label>
+              <textarea name="description" id="description" cols="4" rows="4" class="form-control" placeholder="Enter new description" required></textarea>
+            </div>
+        
+            <!-- Submit button -->
+            <div class="form-group">
+              <input type="submit" class="btn btn-warning" value="Update Transaction">
+            </div>
+          </form>
+        </div>
+        
+        <!-- ******************************* End of Update Transaction Form ******************************* -->
+        <!-- ******************************* Delete Transaction Form ******************************* -->
+        <div class="delete-transaction jumbotron" id="delete-transaction">
+          <h3>Delete a Transaction</h3>
+          <table class="table table-bordered table-hover">
+            <thead class="thead-dark">
+              <tr>
+                <th>Title</th>
+                <th>Amount</th>
+                <th>Description</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:each="transaction : ${transactions}">
+                <td th:text="${transaction.title}"></td>
+                <td th:text="${transaction.amount}"></td>
+                <td th:text="${transaction.description}"></td>
+                <td>
+                  <form action="/transactions/deleteTransaction" method="post" style="display:inline;" onsubmit="return confirmDeleteTransaction(this);">
+                    <input type="hidden" name="transactionId" th:value="${transaction.transactionId}">
+                    <button type="submit" class="btn btn-danger">
+                      <i class="fas fa-trash-alt"></i> Delete
+                    </button>
+                  </form>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <!-- ******************************* End of Delete Transaction Form ******************************* -->
+         <!-- ******************************* View Transaction ******************************* -->
+        <div class="view-transaction jumbotron">
+          <h3 class="mt-3">Your Transactions</h3>
+          <div class="alert alert-info" th:if="${isEndOfMonth}">
+              <strong>End of Month Summary:</strong> Total spent this month: <span th:text="${monthlySpent}"></span>
+          </div>
+          <div class="alert alert-success">
+              Total Amount Spent: <span th:text="${totalSpent}"></span>
+          </div>
+          <table class="table table-bordered">
+              <thead class="thead-dark">
+                  <tr>
+                      <th>Date</th>
+                      <th>Title</th>
+                      <th>Amount</th>
+                      <th>Description</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  <tr th:each="transaction : ${transactions}">
+                      <td th:text="${#dates.format(transaction.date, 'yyyy-MM-dd')}"></td>
+                      <td th:text="${transaction.title}"></td>
+                      <td th:text="${transaction.amount}"></td>
+                      <td th:text="${transaction.description}"></td>
+                  </tr>
+              </tbody>
+          </table>
+      </div>
+      <!-- ******************************* End of View Transaction ******************************* -->
+      </div>
+    </div>
+  </div>
+  <!-- Include Footer -->
+  <div th:insert="~{footer :: footer}"></div>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+    const addTransactionBtn = document.getElementById("addTransaction");
+    const addTransactionForm = document.querySelector(".add-transaction");
+
+    addTransactionBtn.addEventListener("click", function () {
+        if (addTransactionForm.style.visibility === "visible") {
+          addTransactionForm.style.visibility = "hidden";
+          addTransactionForm.style.display = "none";
+        } else {
+          addTransactionForm.style.visibility = "visible";
+          addTransactionForm.style.display = "block";
+        }
+      });
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+    const updateTransactionBtn = document.getElementById("updateTransaction");
+    const updateTransactionForm = document.querySelector(".update-transaction");
+
+    updateTransactionBtn.addEventListener("click", function () {
+        if (updateTransactionForm.style.visibility === "visible") {
+          updateTransactionForm.style.visibility = "hidden";
+          updateTransactionForm.style.display = "none";
+        } else {
+          updateTransactionForm.style.visibility = "visible";
+          updateTransactionForm.style.display = "block";
+        }
+      });
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+    const deleteTransactionBtn = document.getElementById("deleteTransaction");
+    const deleteTransactionForm = document.querySelector(".delete-transaction");
+
+    deleteTransactionBtn.addEventListener("click", function () {
+      if (deleteTransactionForm.style.visibility === "visible") {
+        deleteTransactionForm.style.visibility = "hidden";
+        deleteTransactionForm.style.display = "none";
+      } else {
+        deleteTransactionForm.style.visibility = "visible";
+        deleteTransactionForm.style.display = "block";
+        }
+      });
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+    const viewTransactionBtn = document.getElementById("viewTransaction");
+    const viewTransactionForm = document.querySelector(".view-transaction");
+
+    viewTransactionBtn.addEventListener("click", function () {
+      if (viewTransactionForm.style.visibility === "visible") {
+        viewTransactionForm.style.visibility = "hidden";
+        viewTransactionForm.style.display = "none";
+      } else {
+        viewTransactionForm.style.visibility = "visible";
+        viewTransactionForm.style.display = "block";
+        }
+      });
+    });
+
+  function confirmDeleteTransaction(form) {
+  const confirmed = window.confirm("Are you sure you want to delete this transaction?");
+  return confirmed; // If true, the form will be submitted; otherwise, it will be canceled.
+  }
+
+    // Populate the date field with the current date
+    document.addEventListener("DOMContentLoaded", function () {
+      const dateField = document.getElementById("transaction_date");
+      const today = new Date();
+      const formattedDate = today.toISOString().slice(0, 10); // Format: YYYY-MM-DD
+      dateField.value = formattedDate;
+    });
+ </script>
+</body>
+
+<body th:if="${loggedIn == false}">
+  <!-- <h1  th:text="${loggedIn}"></h1> -->
+    <script>
+      window.alert("Please Login to Continue")
+      window.location.href = "/";
+    </script>    
+</body>
+</html>
