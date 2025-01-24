@@ -1,9 +1,7 @@
 com\app\wisemoney\controller\IndexController.class
 com\app\wisemoney\service\TransactionService.class
 com\app\wisemoney\controller\UserController.class
-META-INF\maven\wisemoney\wisemoney\pom.xml
 com\app\wisemoney\WisemoneyApplication.class
-META-INF\maven\wisemoney\wisemoney\pom.properties
 com\app\wisemoney\service\UserService.class
 com\app\wisemoney\controller\TransactionController.class
 com\app\wisemoney\repository\UserRepository.class
