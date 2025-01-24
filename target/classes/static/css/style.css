@@ -1,0 +1,93 @@
+*{
+  text-transform: capitalize;
+}
+body {
+  background: url('../images/background.jpg') no-repeat center center fixed; 
+  background-size: 100%; /* Ensures the image covers the entire viewport */
+  margin: 0; /* Avoid unnecessary margin */
+  padding: 0; /* Reset padding */
+  height: 100vh; /* Set the height to fill the viewport */
+}
+
+.header{
+	color: white;
+}
+.navbar.sticky-top {
+  position: sticky;
+  top: 0;
+  z-index: 1030; /* Ensure it's above other content */
+}
+
+.nav-link {
+  position: relative;
+  display: flex;
+  align-items: center; /* Aligns icon and text */
+}
+
+.nav-link i, .nav-link span.material-symbols-outlined {
+  margin-right: 5px; /* Adds some space between the icon and the text */
+}
+
+.nav-link:hover::after {
+  content: attr(data-name); /* Display the name from the "data-name" attribute */
+  position: absolute;
+  right: 100%; /* Position the name to the left of the icon */
+  margin-right: 10px; /* Adds some space between the icon and the name */
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: #000;
+  color: #fff;
+  padding: 8px 15px; /* Increase padding for a larger tooltip */
+  border-radius: 5px;
+  font-size: 14px; /* Make the text a little bigger */
+  white-space: nowrap;
+  opacity: 1;
+  visibility: visible;
+  z-index: 1000;
+}
+
+.nav-link::after {
+  content: '';
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.nav-link.right:hover::after {
+  left: auto;
+  right: 100%; /* Position the name to the left of the icon for "right" class */
+  margin-left: 10px; /* Adds space between the icon and the name */
+}
+
+.nav-link.left:hover::after {
+  left: 100%;
+  right: auto; /* Position the name to the left of the icon for "right" class */
+  margin-left: 10px; /* Adds space between the icon and the name */
+}
+
+.login-container {
+  backdrop-filter: blur(100px); /* Adjust the blur intensity */
+  background-color: rgba(255, 255, 255, 0.1); /* Semi-transparent background */
+  border-radius: 10px; /* Optional: for rounded corners */
+  padding: 20px; /* Optional: for spacing */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional: for a subtle shadow */
+}
+
+.input{
+  text-transform: none;
+}
+
+.input-email{
+  text-transform: lowercase;
+}
+
+.btns{
+  border-radius: 10px !important;
+  border: 2px black !important;
+}
+
+.add-transaction, .update-transaction, .delete-transaction, .view-transaction{
+  background-color: #ffffff6b !important;
+  visibility: hidden;
+  display: none;
+}

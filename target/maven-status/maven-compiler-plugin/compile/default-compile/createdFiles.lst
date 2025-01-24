@@ -1,0 +1,10 @@
+com\app\wisemoney\controller\IndexController.class
+com\app\wisemoney\service\TransactionService.class
+com\app\wisemoney\controller\UserController.class
+com\app\wisemoney\WisemoneyApplication.class
+com\app\wisemoney\service\UserService.class
+com\app\wisemoney\controller\TransactionController.class
+com\app\wisemoney\repository\UserRepository.class
+com\app\wisemoney\entity\UserEntity.class
+com\app\wisemoney\entity\TransactionEntity.class
+com\app\wisemoney\repository\TransactionRepository.class

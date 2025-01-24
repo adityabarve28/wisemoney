@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,200,0,0&" />
+  <title>Wisemoney</title>
+</head>
+<body>
+  <!-- Include Navbar -->
+  <div th:insert="~{navbar :: navbar}"></div><br>
+
+  <div class="container">
+    <div class="container-fluid jumbotron login-container">
+      <h2 class="title">Signup</h2>
+      <div th:if="${error}" class="alert alert-danger">
+        <span th:text="${error}"></span>
+    </div>
+    
+      <form action="/user/adduser" method="post" class="" onsubmit="return validateForm()">
+        <div class="form-group">
+          <label for="email">Enter Email</label>
+          <input type="text" id="email" class="form-control input" name="email" placeholder="Enter Email"
+          style="text-transform: lowercase;">
+        </div>
+        <div class="form-group">
+          <label for="username">Enter Username</label>
+          <input type="text" id="username" class="form-control input" name="username" placeholder="Enter Username">
+        </div>
+        <div class="form-group position-relative">
+          <label for="password">Enter Password</label>
+          <div class="input-group">
+            <input type="password" class="form-control input" id="password" name="password" placeholder="Enter Password">
+            <div class="input-group-append position-absolute" style="right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;">
+              <span id="togglePassword" onclick="togglePassword()">
+                <i class="fas fa-eye-slash"></i> <!-- Default: closed eye -->
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="form-group position-relative">
+          <label for="cnfpassword">Confirm Password</label>
+          <div class="input-group">
+            <input type="password" class="form-control input" id="cnfpassword" name="cnfpassword" placeholder="Confirm Password">
+            <div class="input-group-append position-absolute" style="right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;">
+              <span id="toggleCnfPassword" onclick="toggleCnfPassword()">
+                <i class="fas fa-eye-slash"></i> <!-- Default: closed eye -->
+              </span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <input type="submit" value="Signup" class="btn btn-primary form-control">
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // Script to toggle password visibility
+    function togglePassword() {
+      const passwordField = document.getElementById("password");
+      const toggleIcon = document.getElementById("togglePassword").querySelector("i");
+
+      if (passwordField.type === "password") {
+        passwordField.type = "text";
+        toggleIcon.classList.remove("fa-eye-slash");
+        toggleIcon.classList.add("fa-eye");
+      } else {
+        passwordField.type = "password";
+        toggleIcon.classList.remove("fa-eye");
+        toggleIcon.classList.add("fa-eye-slash");
+      }
+    }
+
+    // Script to toggle confirm password visibility
+    function toggleCnfPassword() {
+      const cnfpasswordField = document.getElementById("cnfpassword");
+      const toggleIcon2 = document.getElementById("toggleCnfPassword").querySelector("i");
+
+      if (cnfpasswordField.type === "password") {
+        cnfpasswordField.type = "text";
+        toggleIcon2.classList.remove("fa-eye-slash");
+        toggleIcon2.classList.add("fa-eye");
+      } else {
+        cnfpasswordField.type = "password";
+        toggleIcon2.classList.remove("fa-eye");
+        toggleIcon2.classList.add("fa-eye-slash");
+      }
+    }
+
+    // Validator Script to ensure email/username and password are not empty
+    function validateForm() {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      const username = document.getElementById("username").value;
+      const cnfpassword = document.getElementById("cnfpassword").value;
+
+      if (password == "" || password == null) {
+        window.alert("Password Cannot be Empty");
+        return false;
+      } else if (email == "" || email == null) {
+        window.alert("Email Cannot be Empty");
+        return false;
+      } else if (username == "" || username == null) {
+        window.alert("Username Cannot be Empty");
+        return false;
+      } else if (cnfpassword == "" || cnfpassword == null) {
+        window.alert("Confirm Password Cannot be Empty");
+        return false;
+      } else if (password != cnfpassword) {
+        window.alert("Confirm Password and Password Do Not Match");
+        return false;
+      } else if (password === username) {
+        window.alert("Password cannot be same as Username");
+        return false;
+      } else if (!email.includes('@') || !email.endsWith('.com')) {
+        window.alert("Please enter a valid email address (e.g., example@domain.com)");
+        return false;
+      } else if (password.length < 6) {
+        window.alert("Password should be at least 6 characters long");
+        return false;
+      } else if (!/[A-Z]/.test(password)) {
+        window.alert("Password should contain at least one uppercase letter");
+        return false;
+      } else if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+        window.alert("Password should contain at least one special character (e.g., !, @, #, $, etc.)");
+        return false;
+       } 
+    // else {
+    //     window.alert("Successfully Signed Up!");
+    //     return true; // Proceed with the form submission
+    //   }
+    }
+  </script>
+</body>
+</html>
